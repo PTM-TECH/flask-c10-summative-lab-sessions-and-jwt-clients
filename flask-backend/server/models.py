@@ -38,4 +38,14 @@ class Expense(db.Model):
 
     # relationship back to User
     user = db.relationship("User", back_populates="expenses")
+
+    def to_dict(self):
+        return {
+        "id": self.id,
+        "title": self.title,
+        "amount": self.amount,
+        "category": self.category,
+        "description": self.description,
+        "created_at": self.created_at
+    }
     
