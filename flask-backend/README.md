@@ -40,7 +40,7 @@
 - Apply migrations: flask db upgrade head
 
 ### Seed the database(optional)
-python3 seed.py
+- python3 seed.py
 
 # Run Instructions
 - Start the flask server: python3 app.py
@@ -53,7 +53,7 @@ python3 seed.py
 - Log in a user and create session
 ### /check_session -> GET
 - Check if a user is logged in
-### /logout
+### /logout -> DELETE
 - Logs out user and clears session
 
 # Expense Endpoints
