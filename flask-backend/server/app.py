@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, session
 from flask_migrate import Migrate
-from flask_bcrypt import Bcrypt
-from models import db, Expense
+from models import db, Expense, bcrypt
 from auth import auth_bp
 from schemas import ExpenseSchema
 
@@ -15,7 +14,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 #initialize extensions
 db.init_app(app)
-bcrypt = Bcrypt(app)
+bcrypt.init_app(app)
 migrate = Migrate(app, db)
 expense_schema = ExpenseSchema()
 

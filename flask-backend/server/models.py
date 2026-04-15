@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 #create User Model
 class User(db.Model):
@@ -16,11 +17,11 @@ class User(db.Model):
     
     # Hash user password
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password).decode("utf-8")
+        self.password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
     # Check password
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
     
 #create Expense model
 class Expense(db.Model):
