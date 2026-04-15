@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from models import db, Expense
 from auth import auth_bp
+from schemas import ExpenseSchema
 
 # initialize app
 app = Flask(__name__)
@@ -16,6 +17,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
+expense_schema = ExpenseSchema()
 
 #register auth blueprint
 app.register_blueprint(auth_bp)
@@ -39,7 +41,7 @@ def get_expenses():
     query = Expense.query.filter_by(user_id=user_id)
     paginated = query.paginate(page=page, per_page=per_page, error_out=False)
 
-    expenses = [e.to_dict() for e in paginated.items]
+    expenses = expense_schema.dump(paginated.items, many=True)
 
     return jsonify({
         "data": expenses,
@@ -56,9 +58,10 @@ def create_expense():
         return jsonify({"error": "Unauthorized access.Kindly log in to continue..."}), 401
 
     data = request.get_json()
-    if not data.get("title") or not data.get("amount"):
-        return jsonify({"error": "Missing required fields"}), 400
-
+    #marshmallow validation
+    errors = expense_schema.validate(data)
+    if errors:
+        return jsonify({"errors": errors}), 400
     expense = Expense(
         title=data["title"],
         amount=data["amount"],
@@ -72,7 +75,6 @@ def create_expense():
     db.session.commit()
 
     return jsonify({"message": "Expense created successfully!"}), 201
-
 
 # Update an expense -> PATCH
 @app.route("/expenses/<int:id>", methods=["PATCH"])
