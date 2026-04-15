@@ -48,6 +48,30 @@ def get_expenses():
         "total_pages": paginated.pages
     }), 200
 
+#Get a single expense route -> GET
+@app.route("/expenses/<int:id>", methods=["GET"])
+def get_expense(id):
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Unauthorized access.Kindly log in to continue..."}), 401
+    expense = Expense.query.get(id)
+    if not expense:
+        return jsonify({"error": "Expense not found"}), 404
+
+    # ensure user can only access their own expense
+    if expense.user_id != user_id:
+        return jsonify({"error": "Forbidden"}), 403
+
+    return jsonify({
+        "data": {
+            "id": expense.id,
+            "title": expense.title,
+            "amount": expense.amount,
+            "category": expense.category,
+            "description": expense.description,
+            "created_at": expense.created_at
+        }
+    }), 200
 
 # Create an expense -> POST
 @app.route("/expenses", methods=["POST"])
@@ -123,4 +147,4 @@ def delete_expense(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(debug=True, port=5555)
