@@ -8,7 +8,7 @@ from schemas import ExpenseSchema
 app = Flask(__name__)
 
 #app configurations
-app.config["SECRET_KEY"] = "super-secret-key"
+app.config["SECRET_KEY"] = "b7f9c2e4a8d14c5fb3e7a9d6c1f82e4b9d3f6a1c7e8b2d4f5a6c9e1b3d7f2a8"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
